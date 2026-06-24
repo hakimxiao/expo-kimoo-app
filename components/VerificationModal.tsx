@@ -1,5 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -17,30 +16,53 @@ interface Props {
   visible: boolean;
   email: string;
   onClose: () => void;
+  onVerify: (code: string) => Promise<void>;
+  onResend: () => Promise<void>;
+  error?: string;
 }
 
-export default function VerificationModal({ visible, email, onClose }: Props) {
+export default function VerificationModal({
+  visible,
+  email,
+  onClose,
+  onResend,
+  onVerify,
+  error,
+}: Props) {
   const [code, setCode] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     if (visible) {
       setCode("");
+      setIsSubmitting(false);
       const timer = setTimeout(() => inputRef.current?.focus(), 300);
       return () => clearTimeout(timer);
     }
   }, [visible]);
 
-  const handleCodeChange = (text: string) => {
+  useEffect(() => {
+    if (error) {
+      setCode("");
+      setIsSubmitting(false);
+    }
+  }, [error]);
+
+  const handleCodeChange = async (text: string) => {
     const digits = text.replace(/[^0-9]/g, "").slice(0, 6);
     setCode(digits);
-    if (digits.length === 6) {
-      setTimeout(() => {
-        onClose();
-        router.replace("/");
-      }, 300);
+    if (digits.length === 6 && !isSubmitting) {
+      setIsSubmitting(true);
+      await onVerify(digits);
     }
+  };
+
+  const handleResend = async () => {
+    setCode("");
+    await onResend();
+    setTimeout(() => inputRef.current?.focus(), 300);
   };
 
   return (
@@ -101,9 +123,12 @@ export default function VerificationModal({ visible, email, onClose }: Props) {
             keyboardType="number-pad"
             maxLength={6}
             style={styles.hiddenInput}
+            editable={!isSubmitting}
           />
 
-          <TouchableOpacity style={styles.resendBtn}>
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+          <TouchableOpacity style={styles.resendBtn} onPress={handleResend}>
             <Text style={styles.resendText}>
               Belum menerima kode?{" "}
               <Text style={styles.resendLink}>Kirim ulang</Text>
@@ -157,7 +182,7 @@ const styles = StyleSheet.create({
   boxesRow: {
     flexDirection: "row",
     gap: 10,
-    marginBottom: 32,
+    marginBottom: 16,
   },
   box: {
     width: 48,
@@ -192,6 +217,7 @@ const styles = StyleSheet.create({
   },
   resendBtn: {
     paddingVertical: 4,
+    marginTop: 8,
   },
   resendText: {
     fontFamily: "Poppins-Regular",
@@ -201,5 +227,12 @@ const styles = StyleSheet.create({
   resendLink: {
     fontFamily: "Poppins-Medium",
     color: "#6c4ef5",
+  },
+  errorText: {
+    fontFamily: "Poppins-Regular",
+    fontSize: 13,
+    color: "#ff4d4f",
+    textAlign: "center",
+    marginBottom: 8,
   },
 });

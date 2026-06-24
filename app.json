@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "expo-kimoo-app",
-    "slug": "expo-kimoo-app",
+    "name": "kimo-app",
+    "slug": "kimo-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "expokimooapp",
+    "scheme": "kimo-app",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -38,7 +38,9 @@
             "backgroundColor": "#000000"
           }
         }
-      ]
+      ],
+      "@clerk/expo",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
