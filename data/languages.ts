@@ -1,9 +1,9 @@
-import { Language } from "@/types/learning";
+﻿import { Language } from "@/types/learning";
 
 export const LANGUAGES: Language[] = [
   {
     code: "es",
-    name: "Spanish",
+    name: "Spanyol",
     nativeName: "Español",
     flag: "https://flagcdn.com/w320/es.png",
     color: "#FF9500",
@@ -11,7 +11,7 @@ export const LANGUAGES: Language[] = [
   },
   {
     code: "fr",
-    name: "French",
+    name: "Prancis",
     nativeName: "Français",
     flag: "https://flagcdn.com/w320/fr.png",
     color: "#4D88FF",
@@ -19,7 +19,7 @@ export const LANGUAGES: Language[] = [
   },
   {
     code: "ja",
-    name: "Japanese",
+    name: "Jepang",
     nativeName: "日本語",
     flag: "https://flagcdn.com/w320/jp.png",
     color: "#FF3B30",
@@ -27,7 +27,7 @@ export const LANGUAGES: Language[] = [
   },
   {
     code: "ko",
-    name: "Korean",
+    name: "Korea",
     nativeName: "한국어",
     flag: "https://flagcdn.com/w320/kr.png",
     color: "#4D88FF",
@@ -35,7 +35,7 @@ export const LANGUAGES: Language[] = [
   },
   {
     code: "de",
-    name: "German",
+    name: "Jerman",
     nativeName: "Deutsch",
     flag: "https://flagcdn.com/w320/de.png",
     color: "#FFCC00",
@@ -43,10 +43,26 @@ export const LANGUAGES: Language[] = [
   },
   {
     code: "zh",
-    name: "Chinese",
+    name: "Mandarin",
     nativeName: "中文",
     flag: "https://flagcdn.com/w320/cn.png",
     color: "#FF3B30",
     learners: "7.4M",
+  },
+  {
+    code: "en" as Language["code"],
+    name: "Inggris",
+    nativeName: "English",
+    flag: "https://flagcdn.com/w320/gb.png",
+    color: "#34C759",
+    learners: "31.2M",
+  },
+  {
+    code: "ar" as Language["code"],
+    name: "Arab",
+    nativeName: "العربية",
+    flag: "https://flagcdn.com/w320/sa.png",
+    color: "#AF52DE",
+    learners: "6.8M",
   },
 ];
