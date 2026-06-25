@@ -484,3 +484,226 @@ Before every feature implementation:
 - Follow it strictly
 - Build clean, simple, teachable code
 - Replicate UI exactly when designs are provided
+
+# ===========================================
+
+# PROJECT CUSTOMIZATION (READ CAREFULLY)
+
+# ===========================================
+
+## Project Purpose
+
+This repository is based on the JavaScript Mastery React Native Lingua project.
+
+The original project targets English-speaking users.
+
+This customized version targets Indonesian users.
+
+The goal is to localize the learning experience while preserving the original architecture and coding style.
+
+Always preserve compatibility with the original repository.
+
+---
+
+## Current Development Phase
+
+The project is still following the original tutorial.
+
+Only implement what is requested.
+
+Do not build future features unless explicitly instructed.
+
+---
+
+## Localization Rules
+
+The target audience is Indonesian.
+
+Whenever editing lesson content:
+
+- Use natural Bahasa Indonesia.
+- Avoid literal translations.
+- Prefer conversational Indonesian.
+- Keep the foreign vocabulary.
+- Translate only its meaning.
+
+Example
+
+Hola
+
+↓
+
+Halo
+
+Buenos días
+
+↓
+
+Selamat pagi
+
+¿Cómo estás?
+
+↓
+
+Apa kabar?
+
+Mucho gusto.
+
+↓
+
+Senang bertemu denganmu.
+
+---
+
+## Lesson Rules
+
+When editing lessons.ts
+
+Localize:
+
+- title (when appropriate)
+- description
+- goals
+- translations
+- phrase translations
+- quiz questions
+- quiz options
+- hints
+- AI Teacher prompt
+- AI intro message
+- topics
+
+Do NOT modify
+
+- ids
+- lessonId
+- unitId
+- languageCode
+- object structures
+- exports
+
+---
+
+## AI Teacher Rules
+
+The AI Teacher must always communicate using Bahasa Indonesia.
+
+The AI Teacher should:
+
+- explain in Indonesian
+- teach pronunciation
+- ask learners to repeat
+- motivate learners
+- correct mistakes politely
+- sound friendly
+- sound encouraging
+- sound like a real teacher
+
+Do NOT simply translate prompts.
+
+Rewrite them naturally.
+
+---
+
+## Quiz Rules
+
+Convert quizzes into Indonesian.
+
+Example
+
+Old
+
+What does "Hola" mean?
+
+↓
+
+Apa arti kata "Hola"?
+
+Old
+
+Translate:
+
+"Good night"
+
+↓
+
+Terjemahkan ke Bahasa Spanyol:
+
+"Selamat malam"
+
+---
+
+## Hint Rules
+
+Hints should sound natural.
+
+Example
+
+Think about when you go to sleep.
+
+↓
+
+Petunjuk:
+
+Digunakan saat akan tidur.
+
+---
+
+## Writing Style
+
+The application should feel similar to Duolingo.
+
+Use:
+
+- warm language
+- simple explanations
+- beginner friendly wording
+- encouraging tone
+
+Avoid overly formal Indonesian.
+
+---
+
+## Current Scope
+
+Currently only localize the existing languages.
+
+Current languages:
+
+- Spanish
+- French
+- Japanese
+- German
+
+Korean and Chinese are placeholders.
+
+Do not expand them unless requested.
+
+---
+
+## Future Roadmap (NOT NOW)
+
+Future versions will include:
+
+- English
+- Arabic
+- Korean lessons
+- Chinese lessons
+- More units
+- More lessons
+- Improved AI Teacher
+
+Do not implement these until explicitly requested.
+
+---
+
+## Code Style
+
+When modifying existing files:
+
+- preserve formatting
+- preserve property ordering
+- preserve naming conventions
+- preserve coding style
+
+New code should be indistinguishable from the original repository.
