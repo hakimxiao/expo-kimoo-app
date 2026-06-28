@@ -1,4 +1,5 @@
 import { images } from "@/constants/images";
+import { addAppBreadcrumb } from "@/lib/sentry";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -67,7 +68,10 @@ export default function OnboardingScreen() {
         <TouchableOpacity
           className="bg-lingua-purple rounded-2xl flex-row items-center justify-center mt-2 mb-6 py-4.5"
           activeOpacity={0.85}
-          onPress={() => router.push("/(auth)/sign-up")}
+          onPress={() => {
+            addAppBreadcrumb("Onboarding CTA pressed");
+            router.push("/(auth)/sign-up");
+          }}
         >
           <Text className="font-poppins-semibold text-base text-white">
             Ayo Kita Mulai

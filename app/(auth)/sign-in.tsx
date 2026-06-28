@@ -1,6 +1,7 @@
 import SocialButton from "@/components/SocialButton";
 import VerificationModal from "@/components/VerificationModal";
 import { images } from "@/constants/images";
+import { addAppBreadcrumb, captureHandledError } from "@/lib/sentry";
 import { useSignIn, useSSO } from "@clerk/expo";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import * as Linking from "expo-linking";
@@ -34,35 +35,69 @@ export default function SignInScreen() {
   const isLoading = fetchStatus === "fetching";
 
   const handleSignIn = async () => {
-    const { error } = await signIn.emailCode.sendCode({ emailAddress: email });
-    if (error) return;
-    setShowVerification(true);
+    addAppBreadcrumb("Sign in code requested", { method: "email_code" });
+
+    try {
+      const { error } = await signIn.emailCode.sendCode({
+        emailAddress: email,
+      });
+      if (error) {
+        addAppBreadcrumb("Sign in code request failed", undefined, "warning");
+        return;
+      }
+      setShowVerification(true);
+    } catch (error) {
+      captureHandledError(error, "sign_in_send_code");
+    }
   };
 
   const handleVerify = async (code: string) => {
-    const { error } = await signIn.emailCode.verifyCode({ code });
-    if (error) return;
-    if (signIn.status === "complete") {
-      await signIn.finalize({
-        navigate: ({ decorateUrl }) => {
-          router.replace(decorateUrl("/") as Href);
-        },
-      });
+    addAppBreadcrumb("Sign in verification submitted", {
+      method: "email_code",
+    });
+
+    try {
+      const { error } = await signIn.emailCode.verifyCode({ code });
+      if (error) {
+        addAppBreadcrumb("Sign in verification failed", undefined, "warning");
+        return;
+      }
+      if (signIn.status === "complete") {
+        await signIn.finalize({
+          navigate: ({ decorateUrl }) => {
+            router.replace(decorateUrl("/") as Href);
+          },
+        });
+      }
+    } catch (error) {
+      captureHandledError(error, "sign_in_verify_code");
     }
   };
 
   const handleResend = async () => {
-    await signIn.emailCode.sendCode({ emailAddress: email });
+    addAppBreadcrumb("Sign in code resent", { method: "email_code" });
+
+    try {
+      await signIn.emailCode.sendCode({ emailAddress: email });
+    } catch (error) {
+      captureHandledError(error, "sign_in_resend_code");
+    }
   };
 
   const handleSSO = async (strategy: SSOStrategy) => {
-    const { createdSessionId, setActive } = await startSSOFlow({
-      strategy,
-      redirectUrl: Linking.createURL("/"),
-    });
-    if (createdSessionId && setActive) {
-      await setActive({ session: createdSessionId });
-      router.replace("/");
+    addAppBreadcrumb("SSO sign in started", { strategy });
+
+    try {
+      const { createdSessionId, setActive } = await startSSOFlow({
+        strategy,
+        redirectUrl: Linking.createURL("/"),
+      });
+      if (createdSessionId && setActive) {
+        await setActive({ session: createdSessionId });
+        router.replace("/");
+      }
+    } catch (error) {
+      captureHandledError(error, "sign_in_sso", { strategy });
     }
   };
 

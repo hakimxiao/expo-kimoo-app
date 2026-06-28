@@ -1,5 +1,6 @@
 import { images } from "@/constants/images";
 import { LANGUAGES } from "@/data/languages";
+import { addAppBreadcrumb } from "@/lib/sentry";
 import { useLanguageStore } from "@/store/languageStore";
 import { Language, LanguageCode } from "@/types/learning";
 import { Ionicons } from "@expo/vector-icons";
@@ -31,7 +32,12 @@ export default function LanguageSelectScreen() {
 
     return (
       <TouchableOpacity
-        onPress={() => setSelectedCode(item.code)}
+        onPress={() => {
+          addAppBreadcrumb("Language option pressed", {
+            languageCode: item.code,
+          });
+          setSelectedCode(item.code);
+        }}
         className={`flex-row items-center py-3.5 px-3.5 bg-white border-[1.5px] rounded-[14px] ${isSelected ? "bg-[rgba(108,78,245,0.08)] border-lingua-purple" : "border-transparent"}`}
         activeOpacity={0.8}
       >

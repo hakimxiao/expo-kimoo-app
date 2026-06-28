@@ -1,6 +1,7 @@
 import SocialButton from "@/components/SocialButton";
 import VerificationModal from "@/components/VerificationModal";
 import { images } from "@/constants/images";
+import { addAppBreadcrumb, captureHandledError } from "@/lib/sentry";
 import { useSignUp, useSSO } from "@clerk/expo";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import * as Linking from "expo-linking";
@@ -36,36 +37,71 @@ export default function SignUpScreen() {
   const isLoading = fetchStatus === "fetching";
 
   const handleSignUp = async () => {
-    const { error } = await signUp.password({ emailAddress: email, password });
-    if (error) return;
-    await signUp.verifications.sendEmailCode();
-    setShowVerification(true);
+    addAppBreadcrumb("Sign up started", { method: "password" });
+
+    try {
+      const { error } = await signUp.password({
+        emailAddress: email,
+        password,
+      });
+      if (error) {
+        addAppBreadcrumb("Sign up failed", undefined, "warning");
+        return;
+      }
+      await signUp.verifications.sendEmailCode();
+      setShowVerification(true);
+    } catch (error) {
+      captureHandledError(error, "sign_up_password");
+    }
   };
 
   const handleVerify = async (code: string) => {
-    const { error } = await signUp.verifications.verifyEmailCode({ code });
-    if (error) return;
-    if (signUp.status === "complete") {
-      await signUp.finalize({
-        navigate: ({ decorateUrl }) => {
-          router.replace(decorateUrl("/") as Href);
-        },
-      });
+    addAppBreadcrumb("Sign up verification submitted", {
+      method: "email_code",
+    });
+
+    try {
+      const { error } = await signUp.verifications.verifyEmailCode({ code });
+      if (error) {
+        addAppBreadcrumb("Sign up verification failed", undefined, "warning");
+        return;
+      }
+      if (signUp.status === "complete") {
+        await signUp.finalize({
+          navigate: ({ decorateUrl }) => {
+            router.replace(decorateUrl("/") as Href);
+          },
+        });
+      }
+    } catch (error) {
+      captureHandledError(error, "sign_up_verify_code");
     }
   };
 
   const handleResend = async () => {
-    await signUp.verifications.sendEmailCode();
+    addAppBreadcrumb("Sign up code resent", { method: "email_code" });
+
+    try {
+      await signUp.verifications.sendEmailCode();
+    } catch (error) {
+      captureHandledError(error, "sign_up_resend_code");
+    }
   };
 
   const handleSSO = async (strategy: SSOStrategy) => {
-    const { createdSessionId, setActive } = await startSSOFlow({
-      strategy,
-      redirectUrl: Linking.createURL("/"),
-    });
-    if (createdSessionId && setActive) {
-      await setActive({ session: createdSessionId });
-      router.replace("/");
+    addAppBreadcrumb("SSO sign up started", { strategy });
+
+    try {
+      const { createdSessionId, setActive } = await startSSOFlow({
+        strategy,
+        redirectUrl: Linking.createURL("/"),
+      });
+      if (createdSessionId && setActive) {
+        await setActive({ session: createdSessionId });
+        router.replace("/");
+      }
+    } catch (error) {
+      captureHandledError(error, "sign_up_sso", { strategy });
     }
   };
 

@@ -1,4 +1,5 @@
 import { colors, fontFamily } from "@/constants/theme";
+import { addAppBreadcrumb } from "@/lib/sentry";
 import { Ionicons } from "@expo/vector-icons";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useEffect } from "react";
@@ -47,7 +48,7 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
       state.index * tabWidth + (tabWidth - CIRCLE_SIZE) / 2,
       { damping: 18, stiffness: 160 },
     );
-  }, [state.index]);
+  }, [indicatorX, state.index, tabWidth]);
 
   const indicatorStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: indicatorX.value }],
@@ -62,6 +63,12 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
         const isFocused = state.index === index;
 
         const onPress = () => {
+          addAppBreadcrumb("Tab pressed", {
+            routeName: route.name,
+            tabLabel: tab.label,
+            wasFocused: isFocused,
+          });
+
           const event = navigation.emit({
             type: "tabPress",
             target: route.key,
