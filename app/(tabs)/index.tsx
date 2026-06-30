@@ -95,8 +95,15 @@ export default function HomeScreen() {
             ) : (
               <View className="w-8.5 h-8.5 rounded-full bg-surface" />
             )}
-            <Text className="font-poppins-semibold text-base text-text-primary">
-              {greeting}, {firstName}! 👋
+            <Text
+              className="font-poppins-semibold text-base text-text-primary"
+              numberOfLines={1}
+            >
+              {greeting},{" "}
+              {firstName.length > 23
+                ? firstName.slice(0, 23) + "..."
+                : firstName}
+              ! 👋
             </Text>
           </View>
 

@@ -14,8 +14,11 @@ import { setLearningContext } from "@/lib/sentry";
 import { useLanguageStore } from "@/store/languageStore";
 import { useLearningStore } from "@/store/learningStore";
 
+const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
+
 Sentry.init({
-  dsn: "https://b4663f9fc231c6b971ef1d77f9da7d33@o4511320999133184.ingest.de.sentry.io/4511643856142416",
+  dsn: sentryDsn,
+  enabled: Boolean(sentryDsn),
   environment: __DEV__ ? "development" : "production",
   release: `${Constants.expoConfig?.slug ?? "kimoo-app"}@${Constants.expoConfig?.version ?? "1.0.0"}`,
 
