@@ -70,11 +70,11 @@ export default function LanguageSelectScreen() {
           className="w-8 h-8 items-center justify-center"
         >
           <Ionicons name="chevron-back" size={20} color="#001328" />
-          <Text className="flex-1 text-center font-poppins-semibold text-lg text-text-primary">
-            Pilih bahasa
-          </Text>
-          <View className="w-8" />
         </TouchableOpacity>
+        <Text className="flex-1 text-center font-poppins-semibold text-lg text-text-primary">
+          Pilih bahasa
+        </Text>
+        <View className="w-8" />
       </View>
 
       {/* Search */}
